@@ -1,15 +1,14 @@
 # com.megaphonetech.altinvoice
 
-![Screenshot](/images/screenshot.png)
-
-(*FIXME: In one or two paragraphs, describe what the extension does and why one would download it. *)
+This is a beta-quality extension that adds an interface to allow selecting alternate recipients of any invoices sent based on their relationship type.
+It also currently adds a link to the user's contact dashboard to allow for online invoice payment.
 
 The extension is licensed under [AGPL-3.0](LICENSE.txt).
 
 ## Requirements
 
 * PHP v5.4+
-* CiviCRM (*FIXME: Version number*)
+* CiviCRM 5.4+
 
 ## Installation (Web UI)
 
@@ -37,8 +36,14 @@ cv en altinvoice
 
 ## Usage
 
-(* FIXME: Where would a new user navigate to get started? What changes would they see? *)
+* Go to **Administer menu » Customize Data and Screens » Relationship Types**.
+* Click **Edit** next to the relationship you'd like to use to designate who receives a CC of an invoice.
+* Set *CC invoice emails to this relationship* to **Yes** and press **Save**.
 
-## Known Issues
+You may specify multiple relationships.  The extension will pick up the CC regardless of which side of the relationship a contact is on.
 
-(* FIXME *)
+## Future impeovements
+
+Contact me if you're interested in funding the following improvements:
+* Enhance invoice setting to specify the direction of the relationship (a-b, b-a, both)
+* Allow selection of "replace", "cc", or "bcc" for the mail header.
