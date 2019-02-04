@@ -28,15 +28,18 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
         'return' => ["contact_id_b"],
         'contact_id_a' => $params['contactId'],
         'relationship_type_id' => ['IN' => $relTypes],
-              ])['values'];
+      ])['values'];
+      CRM_Core_Error::debug_var('contacts1', $contacts1);
       $alternateContacts = CRM_Utils_Array::collect('contact_id_b', $contacts1);
       $contacts2 = civicrm_api3('Relationship', 'get', [
-                'sequential' => 1,
-                'return' => ["contact_id_a"],
-                'contact_id_b' => $params['contactId'],
-                'relationship_type_id' => ['IN' => [$relTypes]],
-              ])['values'];
+        'sequential' => 1,
+        'return' => ["contact_id_a"],
+        'contact_id_b' => $params['contactId'],
+        'relationship_type_id' => ['IN' => [$relTypes]],
+      ])['values'];
+      CRM_Core_Error::debug_var('contacts2', $contacts2);
       $alternateContacts = array_merge($alternateContacts, CRM_Utils_Array::collect('contact_id_b', $contacts2));
+      CRM_Core_Error::debug_var('alternateContacts', $alternateContacts);
       // NOTE: This gets primary, not billing emails - but so does core.  See CRM-17784.
       if ($alternateContacts) {
         $altEmailRecords = civicrm_api3('Email', 'get', [
