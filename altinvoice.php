@@ -38,19 +38,21 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
               ])['values'];
       $alternateContacts = array_merge($alternateContacts, CRM_Utils_Array::collect('contact_id_b', $contacts2));
       // NOTE: This gets primary, not billing emails - but so does core.  See CRM-17784.
-      $altEmailRecords = civicrm_api3('Email', 'get', [
-                'sequential' => 1,
-        'return' => ["email"],
-        'contact_id' => ['IN' => $alternateContacts],
-        'is_primary' => 1,
-      ])['values'];
-      $altEmails = CRM_Utils_Array::collect('email', $altEmailRecords);
-      $altEmails = rtrim(implode(',', $altEmails), ',');
-      $params['cc'] = $altEmails;
+      if ($alternateContacts) {
+        $altEmailRecords = civicrm_api3('Email', 'get', [
+          'sequential' => 1,
+          'return' => ["email"],
+          'contact_id' => ['IN' => $alternateContacts],
+          'is_primary' => 1,
+        ])['values'];
+        $altEmails = CRM_Utils_Array::collect('email', $altEmailRecords);
+        $altEmails = rtrim(implode(',', $altEmails), ',');
+        $params['cc'] = $altEmails;
+      }
     }
     // Hack in a link to the invoice ID.
     if ($context == 'singleEmail' && $params['valueName'] == 'contribution_invoice_receipt') {
-      $invoicePage = CRM_Altinvoice_Utils::getDefaultInvoicePage();
+      //$invoicePage = CRM_Altinvoice_Utils::getDefaultInvoicePage();
       $checksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contactId']);
       $urlParams = [
         'reset' => 1,
