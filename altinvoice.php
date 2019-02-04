@@ -54,11 +54,10 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
       $checksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contactId']);
       $urlParams = [
         'reset' => 1,
-        'id' => $invoicePage,
-        'ccid' => $params['tplParams']['id'],
+        'id' => $params['tplParams']['id'],
         'cs' => $checksum,
       ];
-      $payUrl = CRM_Utils_System::url('civicrm/contribute/transact', $urlParams, TRUE);
+      $payUrl = CRM_Utils_System::url('civicrm/user', $urlParams, TRUE);
       $params['text'] .= "\nClick here to pay this invoice: $payUrl";
       $params['html'] .= "<p>Click here to <a href='$payUrl'>pay this invoice</a>.</p>";
     }
