@@ -15,12 +15,16 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
       'name' => 'invoice_relationship',
       'return' => 'id',
     ]);
+    CRM_Core_Error::debug_var('invoiceCustomFieldId', $invoiceCustomFieldId);
     $result = civicrm_api3('RelationshipType', 'get', [
       'return' => ["id"],
       'custom_' . $invoiceCustomFieldId => 1,
       'is_active' => 1,
     ])['values'];
+    CRM_Core_Error::debug_var('result', $result);
     $relTypes = array_keys($result);
+    CRM_Core_Error::debug_var('relTypes', $relTypes);
+    CRM_Core_Error::debug_var('contactId', $params['contactId']);
     if ($relTypes) {
       // Get the related contacts in one direction
       $contacts1 = civicrm_api3('Relationship', 'get', [
