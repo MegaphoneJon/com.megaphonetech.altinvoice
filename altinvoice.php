@@ -46,9 +46,10 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
         $params['cc'] = $altEmails;
       }
     }
-    // Hack in a link to the invoice ID.
-    if ($context == 'singleEmail' && $params['valueName'] == 'contribution_invoice_receipt') {
-      //$invoicePage = CRM_Altinvoice_Utils::getDefaultInvoicePage();
+
+    // Hack in a link to the invoice ID, if the altinvoice_include_link_to_pay setting is on.
+    $isLinkFlagSet = Civi::settings()->get('altinvoice_include_link_to_pay');
+    if ($context == 'singleEmail' && $params['valueName'] == 'contribution_invoice_receipt' && $isLinkFlagSet) {
       $checksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contactId']);
       $urlParams = [
         'reset' => 1,
@@ -61,6 +62,7 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
     }
   }
 }
+
 /**
  * Implements hook_civicrm_config().
  *
@@ -190,6 +192,26 @@ function altinvoice_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
  */
 function altinvoice_civicrm_entityTypes(&$entityTypes) {
   _altinvoice_civix_civicrm_entityTypes($entityTypes);
+}
+
+/**
+ * Implements hook_civicrm_buildForm()
+ */
+function altinvoice_civicrm_buildForm($formName, &$form) {
+  if ($formName === 'CRM_Admin_Form_Preferences_Contribute') {
+    $formBuilder = new CRM_Altinvoice_Hook_BuildForm_PreferencesContribute($form);
+    $formBuilder->buildForm();
+  }
+}
+
+/**
+ * Implements hook_civicrm_postProcess()
+ */
+function altinvoice_civicrm_postProcess($formName, &$form) {
+  if ($formName === 'CRM_Admin_Form_Preferences_Contribute') {
+    $formPostProcessor = new CRM_Altinvoice_Hook_PostProcess_PreferencesContribute($form);
+    $formPostProcessor->postProcess();
+  }
 }
 
 // --- Functions below this ship commented out. Uncomment as required. ---
