@@ -46,22 +46,19 @@ function altinvoice_civicrm_alterMailParams(&$params, $context) {
         $params['cc'] = $altEmails;
       }
     }
-    // Hack in a link to the invoice ID.
-    if ($context == 'singleEmail' && $params['valueName'] == 'contribution_invoice_receipt') {
-      //$invoicePage = CRM_Altinvoice_Utils::getDefaultInvoicePage();
+
+    // Hack in a link to the invoice ID, if the altinvoice_include_link_to_pay setting is on.
+    $isLinkFlagSet = Civi::settings()->get('altinvoice_include_link_to_pay');
+    if ($context == 'singleEmail' && $params['valueName'] == 'contribution_invoice_receipt' && $isLinkFlagSet) {
       $checksum = CRM_Contact_BAO_Contact_Utils::generateChecksum($params['contactId']);
       $urlParams = [
         'reset' => 1,
         'id' => $params['contactId'],
         'cs' => $checksum,
       ];
-
-      $isLinkFlagSet = Civi::settings()->get('altinvoice_include_link_to_pay');
-      if ($isLinkFlagSet) {
-        $payUrl = CRM_Utils_System::url('civicrm/user', $urlParams, TRUE);
-        $params['text'] .= "\nClick here to pay this invoice: $payUrl";
-        $params['html'] .= "<p>Click here to <a href='$payUrl'>pay this invoice</a>.</p>";
-      }
+      $payUrl = CRM_Utils_System::url('civicrm/user', $urlParams, TRUE);
+      $params['text'] .= "\nClick here to pay this invoice: $payUrl";
+      $params['html'] .= "<p>Click here to <a href='$payUrl'>pay this invoice</a>.</p>";
     }
   }
 }

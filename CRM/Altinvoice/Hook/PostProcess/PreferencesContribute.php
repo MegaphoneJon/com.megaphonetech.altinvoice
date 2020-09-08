@@ -9,7 +9,7 @@ class CRM_Altinvoice_Hook_PostProcess_PreferencesContribute {
    */
   private $form;
 
-  public function __construct(CRM_Admin_Form_Preferences_Contribute$form) {
+  public function __construct(CRM_Admin_Form_Preferences_Contribute $form) {
     $this->form = $form;
   }
 

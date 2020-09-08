@@ -51,9 +51,8 @@ class CRM_Altinvoice_Hook_BuildForm_PreferencesContribute {
    * Sets default values for the new fields on the form.
    */
   private function setDefaults() {
-    $isLinkFlagSet = Civi::settings()->get('altinvoice_include_link_to_pay');
     $defaults = $this->form->_defaultValues;
-    $defaults['include_link_to_pay'] = $isLinkFlagSet ? TRUE : FALSE;
+    $defaults['include_link_to_pay'] = Civi::settings()->get('altinvoice_include_link_to_pay');;
     $this->form->setDefaults($defaults);
   }
 
